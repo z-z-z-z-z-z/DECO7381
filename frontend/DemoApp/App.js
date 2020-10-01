@@ -220,16 +220,24 @@ const AfterLogin = ({ route, navigation }) => {
 }
 
 const Login = ({ route, navigation }) => {
-  const [text, setText] = useState('');
+  const [username, setUsername] = useState('');
   const [password,setPassword] = useState('');
-
-  const [count, setCount] = useState(0);
+  const user={
+    username: username,
+    password: password,
+  };
 
   const submit=()=>{
     fetch(
-      'http://localhost:8080/hello'
-    ).then((response)=>{
-      console.log(response)
+      'http://localhost:8080/user/getUserByRequest',{
+        method:'POST',
+        headers:{
+          'Conten-type':'application/json;charset=UTF-8'
+        },
+        body: JSON.stringify(user)
+      }
+    ).then((response)=>response.json()).then(data=>{
+      console.log(data);
     })
     .catch((error) => {
       console.error(error);
@@ -250,8 +258,8 @@ const Login = ({ route, navigation }) => {
             <TextInput
               style={{height: 40,width:180,position:'absolute',top:20,borderBottomColor:'black',borderBottomWidth:1}}
               placeholder="Here to input ur username"
-              onChangeText={text => setText(text)}
-              defaultValue={text}
+              onChangeText={username => setUsername(username)}
+              // defaultValue={username}
             /> 
 
             <Text style={{position:"absolute",top:80,textAlign:"left",color:'rgb(19,95,49)',fontSize:windowHeight*0.03}}>Password
@@ -261,14 +269,11 @@ const Login = ({ route, navigation }) => {
               placeholder="Here to input ur password"
               secureTextEntry={true}
               onChangeText={password => setPassword(password)}
-              defaultValue={password}
+              // defaultValue={password}
             /> 
           </View>
 
-          <TouchableOpacity style={styles.signIn} onPress={() => {
-          /* 1. Navigate to the Details route with params */
-          navigation.navigate('HelloUser');
-          }}>
+          <TouchableOpacity style={styles.signIn} onPress={submit}>
             <Text style={{bottom:5,textAlign:"center",color:'white',fontWeight:"bold"}}>Sign In</Text>
           </TouchableOpacity>
           {/*<View style={{position:"absolute",top:windowHeight*0.57,height:91,width:91,borderColor:'rgb(164,202,99)',borderWidth:3,borderRadius:50}}>
